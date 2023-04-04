@@ -1,0 +1,8 @@
+[package]
+name = "linear_temporal_logic"
+version = "0.1"
+lean_version = "leanprover-community/lean:3.50.3"
+path = "src"
+
+[dependencies]
+mathlib = {git = "https://github.com/leanprover-community/mathlib", rev = "31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0"}
