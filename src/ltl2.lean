@@ -137,3 +137,35 @@ theorem satAlways : ∀φ σ, sat σ (□φ) ↔ ∀(j : nat), sat (σ[j...]) φ
   }
 end
 
+theorem satImpl: ∀φ ψ σ, sat σ (φ l→ ψ) ↔ (sat σ φ → sat σ ψ) :=
+begin
+  intros φ ψ σ,
+  apply iff.intro,{
+    intros H,
+    rw ltlImplies at H,
+    repeat {rw sat at H},
+    simp at H,
+    exact H,
+  },{
+    intros H,
+    rw ltlImplies,
+    repeat {rw sat},
+    simp,
+    exact H,
+  }
+end 
+
+def satAll (φ : ltlFormula) : Prop := ∀ (σ : world), sat σ φ 
+
+def a := (atom 1)
+example: satAll (□a l→ ∘a) :=
+begin
+  rw satAll,
+  intros σ,
+  rw satImpl,
+  intros H,
+  rw satAlways at H,
+  rw sat,
+  have inst := H 1,
+  exact inst, 
+end

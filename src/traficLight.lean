@@ -56,8 +56,9 @@ example : sat traficLightWorld □((atom red) l→ ~∘(atom green)) := begin
     simp [traficLightWorld, worldSlice, sliceComposition],
     by_contra,
     simp at h,
+
     
-    nat.modeq
+    --nat.modeq
 
   },
 
