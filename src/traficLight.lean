@@ -1,15 +1,11 @@
 
-import ltl2
+import ltl
 import data.nat.modeq
+import tactic.linarith
 
 open ltlFormula
 
-
---Proving properties about a specific example
-def red : nat := 1
-def yellow : nat := 2
-def green : nat := 3
-
+/-
 def colors : nat -> set nat
 | 0 := {red} 
 | 1 := {red, yellow}
@@ -18,6 +14,28 @@ def colors : nat -> set nat
 | _ := {0}
 
 def traficLightWorld (m : nat) : set nat := colors (m % 4)
+-/
+
+--Proving properties about a specific example
+def red : nat := 1
+def yellow : nat := 2
+def green : nat := 3
+
+def traficLightWorld: nat -> set nat
+| 0 := {red} 
+| 1 := {red, yellow}
+| 2 := {green} 
+| 3 := {yellow}
+| (nat.succ n) := have n - 4 < n.succ, {
+  linarith
+/-
+  induction n,{
+    finish,
+  },{
+    simp,
+  }
+-/
+}, traficLightWorld (n - 4)
 
 --The trafic light is green infinitly often
 --Always eventually green
@@ -45,8 +63,8 @@ end
 --For any state, the light being red implies the next state is not green
 example : sat traficLightWorld □((atom red) l→ ~∘(atom green)) := begin
   rewrite satAlways,
-  rewrite ltlImplies,
   intros j,
+  rewrite satImpl,
   repeat {rewrite sat},
 
   induction j,{
