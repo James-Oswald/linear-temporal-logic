@@ -5,7 +5,12 @@ import tactic.linarith
 
 open ltlFormula
 
-/-
+--Proving properties about a specific example
+def red : nat := 1
+def yellow : nat := 2
+def green : nat := 3
+
+
 def colors : nat -> set nat
 | 0 := {red} 
 | 1 := {red, yellow}
@@ -14,28 +19,6 @@ def colors : nat -> set nat
 | _ := {0}
 
 def traficLightWorld (m : nat) : set nat := colors (m % 4)
--/
-
---Proving properties about a specific example
-def red : nat := 1
-def yellow : nat := 2
-def green : nat := 3
-
-def traficLightWorld: nat -> set nat
-| 0 := {red} 
-| 1 := {red, yellow}
-| 2 := {green} 
-| 3 := {yellow}
-| (nat.succ n) := have n - 4 < n.succ, {
-  linarith
-/-
-  induction n,{
-    finish,
-  },{
-    simp,
-  }
--/
-}, traficLightWorld (n - 4)
 
 --The trafic light is green infinitly often
 --Always eventually green
@@ -74,8 +57,14 @@ example : sat traficLightWorld □((atom red) l→ ~∘(atom green)) := begin
     simp [traficLightWorld, worldSlice, sliceComposition],
     by_contra,
     simp at h,
-
-    
+    have T : (j_n % 4 = 0 ∧ j_n + 1 % 4 = 1 ∧ j_n + 2 % 4 = 2) ∨
+              (j_n % 4 = 1 ∧ j_n + 1 % 4 = 2 ∧ j_n + 2 % 4 = 3) ∨
+              (j_n % 4 = 2 ∧ j_n + 1 % 4 = 3 ∧ j_n + 2 % 4 = 0) ∨
+              (j_n % 4 = 3 ∧ j_n + 1 % 4 = 0 ∧ j_n + 2 % 4 = 1), by sorry,
+    cases T,
+    --Case 1 
+    rw nat.succ_eq_one_add j_n at h j_ih,
+    simp [T] at h j_ih,
     --nat.modeq
 
   },

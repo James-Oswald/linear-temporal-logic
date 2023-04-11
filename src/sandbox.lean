@@ -31,10 +31,6 @@ begin
 end
 -/
 
-lemma l1 : ∀(n : nat), n ≠ 0 → nat.succ n ≠ 0 := begin
-  finish,
-end
-
 example : ∀ (n a b : nat), a ≠ 0 ∧ b ≠ 0  → n - a < n + b :=
 begin
   intros n a b H,
@@ -54,6 +50,7 @@ begin
     simp at h,
     finish,
   },{
+
 
   }
   
@@ -77,3 +74,22 @@ begin
     
   }-/
 end
+
+--Alt trafic light def
+/-
+def traficLightWorld: nat -> set nat
+| 0 := {red} 
+| 1 := {red, yellow}
+| 2 := {green} 
+| 3 := {yellow}
+| (nat.succ n) := have n - 4 < n.succ, {
+  linarith
+/-
+  induction n,{
+    finish,
+  },{
+    simp,
+  }
+-/
+}, traficLightWorld (n - 4)
+-/
