@@ -65,7 +65,7 @@ begin
   simp [H],
 end
 
--- LTL Formulae Semantics --------------------------------------------------------------
+-- LTL Semantics ------------------------------------------------------------------------
 
 def sat : world->ltlFormula->Prop
 | σ ltlTrue := true
@@ -155,17 +155,9 @@ begin
   }
 end 
 
-def satAll (φ : ltlFormula) : Prop := ∀ (σ : world), sat σ φ 
+--A formulae is a tautology if it is satisfied on all worlds
+def satAllWorlds (φ : ltlFormula) : Prop := ∀ (σ : world), sat σ φ 
 
-def a := (atom 1)
-example: satAll (□a l→ ∘a) :=
-begin
-  rw satAll,
-  intros σ,
-  rw satImpl,
-  intros H,
-  rw satAlways at H,
-  rw sat,
-  have inst := H 1,
-  exact inst, 
-end
+
+def ltlEq (φ ψ : ltlFormula) : Prop := (satAllWorlds (φ l→ ψ)) ∧ (satAllWorlds (ψ l→ φ))
+notation φ `≡` ψ := ltlEq φ ψ
