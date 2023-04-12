@@ -155,9 +155,3 @@ begin
   }
 end 
 
---A formulae is a tautology if it is satisfied on all worlds
-def satAllWorlds (φ : ltlFormula) : Prop := ∀ (σ : world), sat σ φ 
-
-
-def ltlEq (φ ψ : ltlFormula) : Prop := (satAllWorlds (φ l→ ψ)) ∧ (satAllWorlds (ψ l→ φ))
-notation φ `≡` ψ := ltlEq φ ψ

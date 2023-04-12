@@ -10,7 +10,6 @@ def red : nat := 1
 def yellow : nat := 2
 def green : nat := 3
 
-
 def colors : nat -> set nat
 | 0 := {red} 
 | 1 := {red, yellow}
@@ -42,47 +41,3 @@ example : sat traficLightWorld □⋄(atom green) := begin
   simp,
 end
  
---Once red the light can not become green imediatlty
---For any state, the light being red implies the next state is not green
-example : sat traficLightWorld □((atom red) l→ ~∘(atom green)) := begin
-  rewrite satAlways,
-  intros j,
-  rewrite satImpl,
-  repeat {rewrite sat},
-
-  induction j,{
-    simp [traficLightWorld, worldSlice, sliceComposition, colors, green, red, yellow],
-  },{
-    simp [traficLightWorld, worldSlice, sliceComposition] at j_ih,
-    simp [traficLightWorld, worldSlice, sliceComposition],
-    by_contra,
-    simp at h,
-    have T : (j_n % 4 = 0 ∧ j_n + 1 % 4 = 1 ∧ j_n + 2 % 4 = 2) ∨
-              (j_n % 4 = 1 ∧ j_n + 1 % 4 = 2 ∧ j_n + 2 % 4 = 3) ∨
-              (j_n % 4 = 2 ∧ j_n + 1 % 4 = 3 ∧ j_n + 2 % 4 = 0) ∨
-              (j_n % 4 = 3 ∧ j_n + 1 % 4 = 0 ∧ j_n + 2 % 4 = 1), by sorry,
-    cases T,
-    --Case 1 
-    rw nat.succ_eq_one_add j_n at h j_ih,
-    simp [T] at h j_ih,
-    --nat.modeq
-
-  },
-
-  /-
-  by_contradiction,
-  cases h,
-  simp at h_right,
-  rw sliceComposition at h_right,
-  induction j,{
-    rw worldSlice at h_right,
-    simp at h_right,
-    rewrite traficLightWorld at h_right,
-    simp [nat.add_mod_eq_ite, colors] at h_right,
-    simp [red, green, yellow] at h_right,
-    exact h_right,
-  },{
-    
-  }-/
-
-end
